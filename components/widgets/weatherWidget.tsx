@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardFooter } from "@components/ui/card";
 import { Button } from "@components/ui/button";
-import { getWeather } from "@/app/actions/commute/getWeather";
+import { getWeather } from "@/app/actions/getWeather";
 import { useState, useEffect } from "react";
 
 export function WeatherWidget() {
@@ -40,7 +40,7 @@ export function WeatherWidget() {
       <CardHeader className="text-xl">Weer van vandaag</CardHeader>
       <CardContent className="font-bold flex flex-row gap-3">
         {temperature} °C{" "}
-        <img src={weatherIcon} alt={""} width="32" height="32" />
+        <img src={weatherIcon ?? undefined} alt="" width={32} height={32} />
       </CardContent>
 
       <CardFooter>

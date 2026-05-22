@@ -1,12 +1,14 @@
-import { CalendarWidget } from "@components/widgets/commuteWidget";
+import { CommuteWidget } from "@components/widgets/commuteWidget";
 import { WeatherWidget } from "@components/widgets/weatherWidget";
+import { CalendarWidget } from "@components/widgets/calendarWidget";
 
-export function CardLayout() {
+export function WidgetLayout() {
   return (
     <>
       <div className="flex flex-row mx-5 gap-3 ">
-        <CalendarWidget />
+        <CommuteWidget />
         <WeatherWidget />
+        <CalendarWidget />
       </div>
     </>
   );

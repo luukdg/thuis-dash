@@ -2,11 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardFooter } from "@components/ui/card";
 import { Button } from "@components/ui/button";
-import { getCommuteTime } from "@/app/actions/commute/getCommuteTime";
+import { getCommuteTime } from "@/app/actions/getCommuteTime";
 import { parseDurationToMinutes } from "@/lib/commute/parseDurationsToMinutes";
 import { useState, useEffect } from "react";
 
-export function CalendarWidget() {
+export function CommuteWidget() {
   const [commuteTime, setCommuteTime] = useState(0);
 
   const fetchCommuteTime = async () => {

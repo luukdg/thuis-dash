@@ -1,4 +1,4 @@
-import { CardLayout } from "@components/sections/cardLayout";
+import { WidgetLayout } from "@components/sections/cardLayout";
 
 export default function Home() {
   return (
@@ -7,7 +7,7 @@ export default function Home() {
         <div className="w-full flex flex-col items-center py-3">
           <h1 className="font-bold">Thuis Dashboard</h1>
         </div>
-        <CardLayout />
+        <WidgetLayout />
       </main>
     </div>
   );
