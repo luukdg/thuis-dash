@@ -37,7 +37,7 @@ export function WeatherWidget() {
 
   return (
     <Card>
-      <CardHeader className="text-xl">Weer van vandaag</CardHeader>
+      <CardHeader className="text-xl">Weer</CardHeader>
       <CardContent className="font-bold flex flex-row gap-3">
         {temperature} °C{" "}
         <img src={weatherIcon ?? undefined} alt="" width={32} height={32} />
