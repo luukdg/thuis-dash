@@ -1,4 +1,4 @@
-import { WidgetLayout } from "@components/sections/cardLayout";
+import { WidgetLayout } from "@components/sections/widgetLayout";
 
 export default function Home() {
   return (

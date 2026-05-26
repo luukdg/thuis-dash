@@ -1,45 +1,47 @@
-"use client";
-
-import { Card, CardContent, CardHeader, CardFooter } from "@components/ui/card";
-import { Button } from "@components/ui/button";
-import { getCommuteTime } from "@/app/actions/getCommuteTime";
+// commuteWidget.tsx (no "use client")
+import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { parseDurationToMinutes } from "@/lib/commute/parseDurationsToMinutes";
-import { useState, useEffect } from "react";
 
-export function CommuteWidget() {
-  const [commuteTime, setCommuteTime] = useState(0);
+async function getCommuteTime() {
+  const response = await fetch(
+    "https://routes.googleapis.com/directions/v2:computeRoutes",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": process.env.GOOGLE_ROUTES_API as string,
+        "X-Goog-FieldMask": "routes.duration",
+      },
+      body: JSON.stringify({
+        origin: { placeId: process.env.HOME_LOCATION },
+        destination: { placeId: process.env.WORK_LOCATION },
+        travelMode: "DRIVE",
+        routingPreference: "TRAFFIC_AWARE",
+        computeAlternativeRoutes: false,
+        routeModifiers: {
+          avoidTolls: false,
+          avoidHighways: false,
+          avoidFerries: false,
+        },
+        languageCode: "nl-NL",
+        units: "METRIC",
+      }),
+      next: { revalidate: 600 }, // 10 minutes
+    },
+  );
 
-  const fetchCommuteTime = async () => {
-    try {
-      const result = await getCommuteTime();
+  if (!response.ok) throw new Error("Failed to fetch commute time");
+  return response.json();
+}
 
-      const durationInSeconds = result?.routes[0]?.duration;
-      if (!durationInSeconds) throw new Error("Invalid route data");
-
-      const minutes = parseDurationToMinutes(durationInSeconds);
-
-      setCommuteTime(minutes);
-      localStorage.setItem("commuteTime", String(minutes));
-
-      console.log("Commute time to work:", minutes, "minutes");
-    } catch (error) {
-      console.error("Failed to fetch commute time:", error);
-    }
-  };
-
-  useEffect(() => {
-    const saved = localStorage.getItem("commuteTime");
-
-    setCommuteTime(Number(saved));
-  }, []);
+export async function CommuteWidget() {
+  const data = await getCommuteTime();
+  const minutes = parseDurationToMinutes(data.routes[0].duration);
 
   return (
     <Card>
       <CardHeader className="text-xl">Reistijd Evie</CardHeader>
-      <CardContent className="font-bold">{commuteTime} Minutes</CardContent>
-      <CardFooter>
-        <Button onClick={fetchCommuteTime}>Fetch data</Button>
-      </CardFooter>
+      <CardContent className="font-bold">{minutes} Minutes</CardContent>
     </Card>
   );
 }

@@ -1,51 +1,27 @@
-"use client";
+import { Card, CardContent, CardHeader } from "@components/ui/card";
 
-import { Card, CardContent, CardHeader, CardFooter } from "@components/ui/card";
-import { Button } from "@components/ui/button";
-import { getWeather } from "@/app/actions/getWeather";
-import { useState, useEffect } from "react";
+async function getWeather() {
+  const response = await fetch(
+    `https://weather.googleapis.com/v1/currentConditions:lookup?key=${process.env.GOOGLE_ROUTES_API}&location.latitude=${process.env.LAT}&location.longitude=${process.env.LON}`,
+    { next: { revalidate: 600 } }, // cache & revalidate every 10 min
+  );
 
-export function WeatherWidget() {
-  const [weatherIcon, setWeatherIcon] = useState<string | null>(null);
-  const [temperature, setTemperature] = useState(0);
+  if (!response.ok) throw new Error("Failed to fetch weather");
+  return response.json();
+}
 
-  const fetchWeather = async () => {
-    try {
-      const result = await getWeather();
-      const temperature = result.temperature.degrees;
-      const iconUrl = `${result.weatherCondition.iconBaseUri}.png`;
-
-      console.log(result);
-
-      setTemperature(temperature);
-      setWeatherIcon(iconUrl);
-
-      localStorage.setItem("Temperature", String(temperature));
-      localStorage.setItem("TempImg", iconUrl);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const savedTemp = localStorage.getItem("Temperature");
-    const savedImg = localStorage.getItem("TempImg");
-
-    setTemperature(Number(savedTemp));
-    setWeatherIcon(savedImg);
-  }, []);
+export async function WeatherWidget() {
+  const data = await getWeather();
+  const temperature = data.temperature.degrees;
+  const iconUrl = `${data.weatherCondition.iconBaseUri}.png`;
 
   return (
     <Card>
       <CardHeader className="text-xl">Weer</CardHeader>
       <CardContent className="font-bold flex flex-row gap-3">
-        {temperature} °C{" "}
-        <img src={weatherIcon ?? undefined} alt="" width={32} height={32} />
+        {temperature} °C
+        <img src={iconUrl} alt="" width={32} height={32} />
       </CardContent>
-
-      <CardFooter>
-        <Button onClick={fetchWeather}>Fetch data</Button>
-      </CardFooter>
     </Card>
   );
 }

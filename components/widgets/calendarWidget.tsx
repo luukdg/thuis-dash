@@ -1,36 +1,46 @@
-"use client";
+import { Card, CardContent, CardHeader } from "@components/ui/card";
+import { calendar } from "@/lib/calendar/google";
+import { unstable_cache } from "next/cache";
 
-import { Card, CardContent, CardHeader, CardFooter } from "@components/ui/card";
-import { Button } from "@components/ui/button";
-import { getCalendarEvents } from "@/app/actions/getCalendar";
-import { useState } from "react";
-import type { calendar_v3 } from "googleapis";
+const getCalendarEvents = unstable_cache(
+  async () => {
+    const now = new Date();
+    const startOfToday = new Date(now);
+    startOfToday.setHours(0, 0, 0, 0);
+    const endOfToday = new Date(now);
+    endOfToday.setHours(23, 59, 59, 999);
 
-export function CalendarWidget() {
-  const [events, setEvents] = useState<calendar_v3.Schema$Event[] | undefined>(
-    [],
-  );
+    const res = await calendar.events.list({
+      calendarId: process.env.GOOGLE_CALENDAR_ID!,
+      timeMin: startOfToday.toISOString(),
+      timeMax: endOfToday.toISOString(),
+      maxResults: 20,
+      singleEvents: true,
+      orderBy: "startTime",
+    });
 
-  const fetchCalendar = async () => {
-    try {
-      const result = await getCalendarEvents();
-      setEvents(result);
+    return res.data.items ?? [];
+  },
+  ["calendar-events"], // cache key
+  { revalidate: 600 }, // 10 minutes
+);
 
-      console.log(result);
-    } catch (error) {
-      console.error("Failed to fetch commute time:", error);
-    }
-  };
+export async function CalendarWidget() {
+  const events = await getCalendarEvents();
 
   return (
     <Card>
       <CardHeader className="text-xl">Afspraken</CardHeader>
       <CardContent className="space-y-3">
-        {events?.map((event) => {
+        {events.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            Geen afspraken vandaag
+          </p>
+        )}
+        {events.map((event) => {
           const isAllDay = !!event.start?.date;
-
           const time = isAllDay
-            ? "All day"
+            ? "Hele dag"
             : event.start?.dateTime
               ? new Date(event.start.dateTime).toLocaleTimeString([], {
                   hour: "2-digit",
@@ -44,19 +54,15 @@ export function CalendarWidget() {
               className="flex items-start justify-between rounded-md border p-3"
             >
               <div className="w-16 text-sm text-muted-foreground">{time}</div>
-
               <div className="flex-1">
                 <p className="font-medium leading-tight">
-                  {event.summary || "Untitled event"}
+                  {event.summary ?? "Untitled event"}
                 </p>
               </div>
             </div>
           );
         })}
       </CardContent>
-      <CardFooter>
-        <Button onClick={fetchCalendar}>Fetch data</Button>
-      </CardFooter>
     </Card>
   );
 }
