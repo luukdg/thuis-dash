@@ -1,4 +1,3 @@
-// commuteWidget.tsx (no "use client")
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { parseDurationToMinutes } from "@/lib/commute/parseDurationsToMinutes";
 
@@ -26,7 +25,7 @@ async function getCommuteTime() {
         languageCode: "nl-NL",
         units: "METRIC",
       }),
-      next: { revalidate: 600 }, // 10 minutes
+      next: { revalidate: 900 }, // 15 minutes
     },
   );
 
@@ -39,7 +38,7 @@ export async function CommuteWidget() {
   const minutes = parseDurationToMinutes(data.routes[0].duration);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="text-xl">Reistijd Evie</CardHeader>
       <CardContent className="font-bold">{minutes} Minutes</CardContent>
     </Card>

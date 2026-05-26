@@ -6,7 +6,7 @@ export function GarbageWidget() {
   const garbageEvents = getUpcomingGarbageEvents();
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="text-xl">Afvalkalender</CardHeader>
       <CardContent className="flex flex-col gap-3">
         {garbageEvents.length === 0 ? (

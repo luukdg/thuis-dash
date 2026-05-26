@@ -22,14 +22,14 @@ const getCalendarEvents = unstable_cache(
     return res.data.items ?? [];
   },
   ["calendar-events"], // cache key
-  { revalidate: 600 }, // 10 minutes
+  { revalidate: 1800 }, // 30 minutes
 );
 
 export async function CalendarWidget() {
   const events = await getCalendarEvents();
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="text-xl">Afspraken</CardHeader>
       <CardContent className="space-y-3">
         {events.length === 0 && (
@@ -45,13 +45,14 @@ export async function CalendarWidget() {
               ? new Date(event.start.dateTime).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
+                  hour12: false,
                 })
               : "";
 
           return (
             <div
               key={event.id}
-              className="flex items-start justify-between rounded-md border p-3"
+              className="flex items-center justify-between rounded-md border p-3"
             >
               <div className="w-16 text-sm text-muted-foreground">{time}</div>
               <div className="flex-1">
