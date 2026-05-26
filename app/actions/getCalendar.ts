@@ -1,6 +1,6 @@
 "use server";
 
-import { calendar } from "@/lib/google";
+import { calendar } from "@/lib/calendar/google";
 
 export async function getCalendarEvents() {
   const now = new Date();

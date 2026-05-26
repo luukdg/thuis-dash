@@ -1,6 +1,7 @@
 import { CommuteWidget } from "@components/widgets/commuteWidget";
 import { WeatherWidget } from "@components/widgets/weatherWidget";
 import { CalendarWidget } from "@components/widgets/calendarWidget";
+import { GarbageWidget } from "@components/widgets/garbageWidget";
 
 export function WidgetLayout() {
   return (
@@ -9,6 +10,7 @@ export function WidgetLayout() {
         <CommuteWidget />
         <WeatherWidget />
         <CalendarWidget />
+        <GarbageWidget />
       </div>
     </>
   );

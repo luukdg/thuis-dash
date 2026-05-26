@@ -1,0 +1,378 @@
+{
+  "year": 2026,
+  "address": {
+    "street": "De Plank",
+    "houseNumber": "12",
+    "postalCode": "5504 TB",
+    "city": "VELDHOVEN"
+  },
+  "source": {
+    "versionDate": "2026-04-24",
+    "note": "Controleer regelmatig www.mijnafvalwijzer.nl voor wijzigingen."
+  },
+  "wasteTypes": {
+    "gfte": "Gft(e)",
+    "pmd": "PMD",
+    "oud_papier": "Oud papier",
+    "restafval": "Restafval",
+    "kca_wagen": "KCA Wagen"
+  },
+  "events": [
+    {
+      "date": "2026-01-06",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-01-13",
+      "weekday": "di",
+      "types": ["pmd"]
+    },
+    {
+      "date": "2026-01-14",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-01-20",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-01-27",
+      "weekday": "di",
+      "types": ["pmd", "restafval"]
+    },
+
+    {
+      "date": "2026-02-03",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-02-10",
+      "weekday": "di",
+      "types": ["pmd"]
+    },
+    {
+      "date": "2026-02-11",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-02-17",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-02-24",
+      "weekday": "di",
+      "types": ["pmd", "restafval"]
+    },
+    {
+      "date": "2026-02-28",
+      "weekday": "za",
+      "types": ["kca_wagen"]
+    },
+
+    {
+      "date": "2026-03-03",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-03-07",
+      "weekday": "za",
+      "types": ["kca_wagen"]
+    },
+    {
+      "date": "2026-03-10",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-03-11",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-03-17",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-03-24",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-03-31",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-04-07",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-04-08",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-04-14",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-04-21",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-04-28",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-05-05",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-05-06",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-05-12",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-05-19",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-05-26",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-06-02",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-06-03",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-06-09",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-06-16",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-06-23",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-06-30",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-07-01",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-07-07",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-07-14",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-07-21",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-07-28",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-07-29",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+
+    {
+      "date": "2026-08-04",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-08-11",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-08-18",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-08-25",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-08-26",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+
+    {
+      "date": "2026-09-01",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-09-05",
+      "weekday": "za",
+      "types": ["kca_wagen"]
+    },
+    {
+      "date": "2026-09-08",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-09-12",
+      "weekday": "za",
+      "types": ["kca_wagen"]
+    },
+    {
+      "date": "2026-09-15",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-09-22",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-09-23",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-09-29",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-10-06",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-10-13",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-10-20",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-10-21",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-10-27",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-11-03",
+      "weekday": "di",
+      "types": ["gfte", "pmd", "restafval"]
+    },
+    {
+      "date": "2026-11-10",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-11-17",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-11-18",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-11-24",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+
+    {
+      "date": "2026-12-01",
+      "weekday": "di",
+      "types": ["pmd", "restafval"]
+    },
+    {
+      "date": "2026-12-08",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-12-15",
+      "weekday": "di",
+      "types": ["pmd"]
+    },
+    {
+      "date": "2026-12-16",
+      "weekday": "wo",
+      "types": ["oud_papier"]
+    },
+    {
+      "date": "2026-12-22",
+      "weekday": "di",
+      "types": ["gfte", "pmd"]
+    },
+    {
+      "date": "2026-12-29",
+      "weekday": "di",
+      "types": ["pmd"]
+    }
+  ]
+}
