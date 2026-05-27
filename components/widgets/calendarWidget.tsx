@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { calendar } from "@/lib/calendar/google";
 import { unstable_cache } from "next/cache";
 import { CalendarEvent } from "@/types/calendarType";
+import { glassCard } from "@/lib/constants/glassCard";
 
 const getCalendarEvents = unstable_cache(
   async (): Promise<CalendarEvent[]> => {
@@ -40,7 +41,7 @@ export async function CalendarWidget() {
   const events = await getCalendarEvents();
 
   return (
-    <Card className="h-full">
+    <Card className={`h-full ${glassCard}`}>
       <CardHeader className="text-xl">Afspraken</CardHeader>
       <CardContent className="space-y-3">
         {events.length === 0 ? (

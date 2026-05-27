@@ -4,6 +4,7 @@ import { Card, CardContent } from "@components/ui/card";
 import { useState, useEffect } from "react";
 import { RoomTemp } from "@/types/tadoTypes";
 import { Skeleton } from "@components/ui/skeleton";
+import { glassCard } from "@/lib/constants/glassCard";
 
 export function InsideTempWidget() {
   const [rooms, setRooms] = useState<RoomTemp[]>([]);
@@ -24,7 +25,7 @@ export function InsideTempWidget() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <Card className="h-full overflow-hidden">
+    <Card className={`h-full ${glassCard}`}>
       <CardContent className="grid grid-cols-2 gap-3">
         {loading ? (
           <>

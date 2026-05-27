@@ -2,12 +2,13 @@ import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { getUpcomingGarbageEvents } from "@/lib/garbage/getGarbage";
 import { formatGarbageDate } from "@/lib/garbage/formatGarbageDate";
 import { Badge } from "@components/ui/badge";
+import { glassCard } from "@/lib/constants/glassCard";
 
 export function GarbageWidget() {
   const garbageEvents = getUpcomingGarbageEvents();
 
   return (
-    <Card className="h-full">
+    <Card className={`h-full ${glassCard}`}>
       <CardContent className="flex flex-col gap-3">
         {garbageEvents.length === 0 ? (
           <p className="text-sm font-normal text-muted-foreground">

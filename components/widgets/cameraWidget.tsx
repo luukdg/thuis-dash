@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { useEffect, useState } from "react";
+import { glassCard } from "@/lib/constants/glassCard";
 
 const REFRESH_INTERVAL = 10_000;
 
@@ -20,7 +21,7 @@ export function CameraWidget() {
   const baseUrl = process.env.NEXT_PUBLIC_GO2RTC_URL;
 
   return (
-    <Card className="h-full">
+    <Card className={`h-full ${glassCard}`}>
       <CardHeader className="text-xl">Camera</CardHeader>
       <CardContent className="flex flex-col gap-3">
         <div className="aspect-video w-full overflow-hidden rounded-md bg-muted">

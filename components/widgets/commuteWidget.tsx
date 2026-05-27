@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { parseDurationToMinutes } from "@/lib/commute/parseDurationsToMinutes";
+import { glassCard } from "@/lib/constants/glassCard";
 
 async function getCommuteTime() {
   const response = await fetch(
@@ -9,7 +10,7 @@ async function getCommuteTime() {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": process.env.GOOGLE_ROUTES_API as string,
-        "X-Goog-FieldMask": "routes.duration",
+        "X-Goog-FieldMask": "routes.duration,routes.distanceMeters",
       },
       body: JSON.stringify({
         origin: { placeId: process.env.HOME_LOCATION },
@@ -35,12 +36,18 @@ async function getCommuteTime() {
 
 export async function CommuteWidget() {
   const data = await getCommuteTime();
+
   const minutes = parseDurationToMinutes(data.routes[0].duration);
+  const distanceKm = (data.routes[0].distanceMeters / 1000).toFixed(0);
 
   return (
-    <Card className="h-full">
-      <CardHeader className="text-xl">Reistijd Evie</CardHeader>
-      <CardContent className="font-bold">{minutes} Minutes</CardContent>
+    <Card className={`h-full ${glassCard}`}>
+      <CardContent className="flex items-center justify-center h-full">
+        <div className="flex flex-col font-bold text-4xl items-center">
+          <p>{minutes} min</p>
+          <p className="text-xl text-muted-foreground">({distanceKm} km)</p>
+        </div>
+      </CardContent>
     </Card>
   );
 }
