@@ -18,11 +18,10 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+
     "paths": {
-      "@components/*": ["components/*"],
-      "@/*": ["./*"]
+      "@components/*": ["./components/*"], // ✅ add ./
+      "@/*": ["./*"] // ✅ already fine
     }
   },
   "include": [

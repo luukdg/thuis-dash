@@ -4,11 +4,12 @@ import { CalendarWidget } from "@components/widgets/calendarWidget";
 import { GarbageWidget } from "@components/widgets/garbageWidget";
 import { CameraWidget } from "@components/widgets/cameraWidget";
 import { EnergyWidget } from "@components/widgets/energyWidget";
-import { TodoWidget } from "@components/widgets/todoWidget";
+import { AtHomeWidget } from "@components/widgets/atHomeWidget";
+import { InsideTempWidget } from "@components/widgets/insideTempWidget";
 
 export function WidgetLayout() {
   return (
-    <div className="grid grid-cols-4 grid-rows-3 gap-3 p-5 w-full flex-1 h-screen">
+    <div className="grid grid-cols-4 grid-rows-3 gap-3 h-full w-full flex-1 p-3">
       {/* Column 1 - Quick Glance */}
       <div className="col-start-1 row-start-1">
         <WeatherWidget />
@@ -28,14 +29,17 @@ export function WidgetLayout() {
       </div>
 
       <div className="col-start-4 row-start-2 row-span-1">
-        <TodoWidget />
+        <AtHomeWidget />
       </div>
 
       {/* Row 3 - Full Width Secondary Info */}
       <div className="col-start-1 col-span-2 row-start-3">
         <EnergyWidget />
       </div>
-      <div className="col-start-3 col-span-2 row-start-3">
+      <div className="col-start-3 col-span-1 row-start-3">
+        <InsideTempWidget />
+      </div>
+      <div className="col-start-4 row-start-3">
         <GarbageWidget />
       </div>
     </div>

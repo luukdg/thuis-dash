@@ -18,15 +18,18 @@ export async function WeatherWidget() {
 
   return (
     <Card className="h-full">
-      <CardContent className="font-bold flex gap-3 text-5xl">
-        {temperature}°
-        <Image
-          src={iconUrl}
-          alt=""
-          width={16}
-          height={16}
-          style={{ width: "32px", height: "32px" }}
-        />
+      <CardContent className="flex-col gap-3">
+        <h1>Buiten</h1>
+        <div className="font-bold flex gap-3 text-4xl">
+          {temperature}°
+          <Image
+            src={iconUrl}
+            alt=""
+            width={32}
+            height={32}
+            style={{ width: "32px", height: "32px" }}
+          />
+        </div>
       </CardContent>
     </Card>
   );

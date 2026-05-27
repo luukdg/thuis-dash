@@ -1,12 +1,15 @@
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { calendar } from "@/lib/calendar/google";
 import { unstable_cache } from "next/cache";
+import { CalendarEvent } from "@/types/calendarType";
 
 const getCalendarEvents = unstable_cache(
-  async () => {
+  async (): Promise<CalendarEvent[]> => {
     const now = new Date();
+
     const startOfToday = new Date(now);
     startOfToday.setHours(0, 0, 0, 0);
+
     const endOfToday = new Date(now);
     endOfToday.setHours(23, 59, 59, 999);
 
@@ -19,10 +22,18 @@ const getCalendarEvents = unstable_cache(
       orderBy: "startTime",
     });
 
-    return res.data.items ?? [];
+    const items = res.data.items ?? [];
+
+    return items.map((event) => ({
+      id: event.id ?? crypto.randomUUID(),
+      summary: event.summary ?? "Untitled event",
+      start: event.start?.dateTime ?? event.start?.date ?? "",
+      end: event.end?.dateTime ?? event.end?.date ?? "",
+      allDay: !event.start?.dateTime,
+    }));
   },
-  ["calendar-events"], // cache key
-  { revalidate: 1800 }, // 30 minutes
+  ["calendar-events"],
+  { revalidate: 1800 },
 );
 
 export async function CalendarWidget() {
@@ -32,37 +43,31 @@ export async function CalendarWidget() {
     <Card className="h-full">
       <CardHeader className="text-xl">Afspraken</CardHeader>
       <CardContent className="space-y-3">
-        {events.length === 0 && (
+        {events.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Geen afspraken vandaag
           </p>
-        )}
-        {events.map((event) => {
-          const isAllDay = !!event.start?.date;
-          const time = isAllDay
-            ? "Hele dag"
-            : event.start?.dateTime
-              ? new Date(event.start.dateTime).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                })
-              : "";
-
-          return (
+        ) : (
+          events.map((event) => (
             <div
               key={event.id}
-              className="flex items-center justify-between rounded-md border p-3"
+              className="flex items-center gap-3 rounded-md border p-3"
             >
-              <div className="w-16 text-sm text-muted-foreground">{time}</div>
-              <div className="flex-1">
-                <p className="font-medium leading-tight">
-                  {event.summary ?? "Untitled event"}
-                </p>
-              </div>
+              <span className="w-16 shrink-0 text-sm text-muted-foreground">
+                {event.allDay
+                  ? "Hele dag"
+                  : new Date(event.start).toLocaleTimeString("nl-NL", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    })}
+              </span>
+              <p className="flex-1 font-medium leading-tight">
+                {event.summary}
+              </p>
             </div>
-          );
-        })}
+          ))
+        )}
       </CardContent>
     </Card>
   );
