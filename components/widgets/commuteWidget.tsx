@@ -44,7 +44,17 @@ export async function CommuteWidget() {
     <Card className={`h-full ${glassCard}`}>
       <CardContent className="flex items-center justify-center h-full">
         <div className="flex flex-col font-bold text-4xl items-center">
-          <p>{minutes} min</p>
+          <p
+            className={
+              minutes < 30
+                ? "text-green-500"
+                : minutes < 60
+                  ? "text-yellow-500"
+                  : "text-red-500"
+            }
+          >
+            {minutes} min
+          </p>
           <p className="text-xl text-muted-foreground">({distanceKm} km)</p>
         </div>
       </CardContent>

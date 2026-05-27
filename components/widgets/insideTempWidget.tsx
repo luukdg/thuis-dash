@@ -24,21 +24,33 @@ export function InsideTempWidget() {
     const interval = setInterval(load, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const getHeatColor = (temp: number) => {
+    if (temp > 26) return "text-orange-500";
+    if (temp > 20) return "text-yellow-500";
+    return "text-green-500";
+  };
+
   return (
-    <Card className={`h-full ${glassCard}`}>
-      <CardContent className="grid grid-cols-2 gap-3">
+    <Card className={`h-full w-full ${glassCard} p-0`}>
+      <CardContent className="grid h-full w-full grid-cols-2 p-1 gap-1">
         {loading ? (
           <>
-            <Skeleton className="h-[40px] w-[full] rounded-full" />
-            <Skeleton className="h-[40px] w-[full] rounded-full" />
-            <Skeleton className="h-[40px] w-[full] rounded-full" />
-            <Skeleton className="h-[40px] w-[full] rounded-full" />
-            <Skeleton className="h-[40px] w-[full] rounded-full" />
+            <Skeleton className="h-full w-full rounded-full" />
+            <Skeleton className="h-full w-[full] rounded-full" />
+            <Skeleton className="h-full w-[full] rounded-full" />
+            <Skeleton className="h-full w-[full] rounded-full" />
+            <Skeleton className="h-full w-[full] rounded-full" />
           </>
         ) : (
           rooms.map((room) => (
-            <div key={room.id} className="flex flex-col leading-none">
-              <div className="text-2xl font-bold">
+            <div
+              key={room.id}
+              className="flex flex-col leading-none bg-muted rounded-xl px-3 justify-center"
+            >
+              <div
+                className={`text-2xl font-bold ${getHeatColor(room.temperature)}`}
+              >
                 {room.temperature.toFixed(1)}°
               </div>
               <div className="text-[10px] text-muted-foreground truncate">

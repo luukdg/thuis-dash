@@ -52,9 +52,9 @@ export async function CalendarWidget() {
           events.map((event) => (
             <div
               key={event.id}
-              className="flex items-center gap-3 rounded-md border p-3"
+              className="flex items-center gap-3 rounded-2xl p-3 border-1 bg-muted"
             >
-              <span className="w-16 shrink-0 text-sm text-muted-foreground">
+              <span className="w-16 shrink-0 text-sm">
                 {event.allDay
                   ? "Hele dag"
                   : new Date(event.start).toLocaleTimeString("nl-NL", {
@@ -63,7 +63,7 @@ export async function CalendarWidget() {
                       hour12: false,
                     })}
               </span>
-              <p className="flex-1 font-medium leading-tight">
+              <p className="flex-1 font-semibold leading-tight">
                 {event.summary}
               </p>
             </div>

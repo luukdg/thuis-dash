@@ -17,27 +17,28 @@ export async function WeatherWidget() {
   const data = await getWeather();
 
   const temp = Math.round(data.temperature.degrees);
-  const feelsLike = Math.round(data.feelsLikeTemperature.degrees);
-
-  const condition = data.weatherCondition?.type;
   const description = data.weatherCondition?.description?.text || "—";
-
   const iconUrl = `${data.weatherCondition.iconBaseUri}.png`;
 
-  const humidity = data.relativeHumidity;
-  const wind = data.wind?.speed?.value;
-  const uv = data.uvIndex;
+  let backgroundClass = "bg-gradient-to-br from-sky-300 via-sky-400 to-sky-500";
+  if (temp > 25) {
+    backgroundClass =
+      "bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500";
+  } else if (temp < 10) {
+    backgroundClass =
+      "bg-gradient-to-br from-cyan-300 via-cyan-400 to-cyan-500";
+  }
 
   return (
-    <Card className={`h-full ${glassCard}`}>
+    <Card className={`h-full ${glassCard} ${backgroundClass}`}>
       <CardContent className="h-full">
-        <div className="flex h-full w-full flex-col justify-center items-center gap-2">
+        <div className="flex h-full w-full flex-col justify-center items-center gap-2 text-black">
           <div className="flex flex-col items-center">
             <p className="text-xl font-semibold">Veldhoven</p>
             {description}
           </div>
           <div className="flex flex-row items-center gap-2">
-            <div className="text-4xl font-bold flex flex-row">{temp}° </div>
+            <div className="text-6xl font-semibold flex flex-row">{temp}° </div>
             <Image src={iconUrl} alt={description} width={25} height={25} />
           </div>
         </div>
