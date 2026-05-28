@@ -1,7 +1,14 @@
 export function formatGarbageDate(dateString: string) {
-  return new Intl.DateTimeFormat("nl-NL", {
+  const formatter = new Intl.DateTimeFormat("nl-NL", {
     weekday: "long",
     day: "numeric",
     month: "long",
-  }).format(new Date(dateString));
+  });
+
+  return formatter
+    .formatToParts(new Date(dateString))
+    .map((part) =>
+      part.type === "weekday" ? part.value.slice(0, 2) : part.value,
+    )
+    .join("");
 }

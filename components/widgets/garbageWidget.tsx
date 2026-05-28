@@ -3,6 +3,7 @@ import { getUpcomingGarbageEvents } from "@/lib/garbage/getGarbage";
 import { formatGarbageDate } from "@/lib/garbage/formatGarbageDate";
 import { Badge } from "@components/ui/badge";
 import { glassCard } from "@/lib/constants/glassCard";
+import { wasteColors } from "@/lib/constants/wasteColors";
 
 export function GarbageWidget() {
   const garbageEvents = getUpcomingGarbageEvents();
@@ -26,8 +27,13 @@ export function GarbageWidget() {
                 </span>
               </div>
               <div className="flex flex-wrap justify-end gap-2">
-                {event.labels.map((label) => (
-                  <Badge key={label}>{label}</Badge>
+                {event.types.map((type) => (
+                  <Badge
+                    key={type}
+                    className={wasteColors[type] ?? "bg-gray-400 text-white"}
+                  >
+                    {type}
+                  </Badge>
                 ))}
               </div>
             </div>
