@@ -1,7 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@components/ui/card";
+import { Card, CardContent } from "@components/ui/card";
 import { glassCard } from "@/lib/constants/glassCard";
+import { useState, useEffect } from "react";
 
 import {
   ResponsiveContainer,
@@ -11,27 +12,20 @@ import {
   Label,
 } from "recharts";
 
-const electricityData = [
-  {
-    name: "Stroom",
-    value: 90, // percentage of dagverbruik
-    fill: "#9b60fa",
-  },
-];
-
-const gasData = [
-  {
-    name: "Gas",
-    value: 42,
-    fill: "#e314a9",
-  },
-];
-
-function Radial({ data, type }: { data: any[]; type: "electricity" | "gas" }) {
+function Radial({
+  value,
+  type,
+  fill,
+}: {
+  value: number;
+  type: "electricity" | "gas";
+  fill: string;
+}) {
   const isElectricity = type === "electricity";
-
   const unit = isElectricity ? "W" : "m³";
   const color = isElectricity ? "#9b60fa2a" : "#e314a82d";
+  const MAX_WATTS = 3000;
+  const percentage = Math.min(100, Math.round((value / MAX_WATTS) * 100));
 
   return (
     <ResponsiveContainer width="100%" height={140}>
@@ -41,13 +35,13 @@ function Radial({ data, type }: { data: any[]; type: "electricity" | "gas" }) {
         innerRadius="90%"
         outerRadius="110%"
         barSize={12}
-        data={data}
+        data={[{ value: percentage }]}
         startAngle={90}
         endAngle={-270}
       >
         <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
 
-        <RadialBar background={{ fill: color }} dataKey="value" />
+        <RadialBar background={{ fill: color }} dataKey="value" fill={fill} />
 
         <Label
           content={({ viewBox }) => {
@@ -63,7 +57,7 @@ function Radial({ data, type }: { data: any[]; type: "electricity" | "gas" }) {
                   fontSize={40}
                   fontWeight={700}
                 >
-                  {data[0].value}
+                  {value}
                 </text>
 
                 <text
@@ -85,17 +79,37 @@ function Radial({ data, type }: { data: any[]; type: "electricity" | "gas" }) {
 }
 
 export function EnergyWidget() {
+  const [energy, setEnergy] = useState(0);
+  const [gas, setGas] = useState(0);
+
+  useEffect(() => {
+    async function load() {
+      const res = await fetch("api/homewizard");
+      const data = await res.json();
+
+      setEnergy(data.power_w);
+      setGas(data.external?.[0]?.value ?? 0);
+      console.log(data.power_w);
+      console.log(data.external?.[0]?.value);
+    }
+
+    load();
+
+    const interval = setInterval(load, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Card className={`h-full ${glassCard}`}>
       <CardContent className="grid grid-cols-2 items-center justify-center h-full">
         {/* Electricity */}
         <div className="flex flex-col items-center">
-          <Radial data={electricityData} type="electricity" />
+          <Radial type="electricity" value={energy} fill="#9b60fa" />
         </div>
 
         {/* Gas */}
         <div className="flex flex-col items-center">
-          <Radial data={gasData} type="gas" />
+          <Radial type="gas" value={gas} fill="#e314a9" />
         </div>
       </CardContent>
     </Card>
