@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import https from "https";
 import fs from "fs";
 import path from "path";
-import { db } from "@/lib/db";
 
 const DEVICE_IP = process.env.HOMEWIZARD_IP!;
 const TOKEN = process.env.HOMEWIZARD_TOKEN!;
@@ -14,8 +13,8 @@ const agent = new https.Agent({
   servername: "5c2faf429adc.p1dongle.device.homewizard.energy",
 });
 
-export async function GET() {
-  return new Promise((resolve) => {
+export function GET(): Promise<Response> {
+  return new Promise<Response>((resolve) => {
     const req = https.request(
       {
         hostname: DEVICE_IP,
@@ -34,39 +33,22 @@ export async function GET() {
           data += chunk;
         });
 
+        res.on("error", (err) => {
+          resolve(NextResponse.json({ error: String(err) }, { status: 500 }));
+        });
+
         res.on("end", () => {
-          const parsed = JSON.parse(data);
+          try {
+            const parsed = JSON.parse(data);
 
-          // insert electricity
-          db.prepare(
-            `
-  INSERT INTO electricity (
-    timestamp,
-    power_w,
-    energy_import_kwh
-  )
-  VALUES (?, ?, ?)
-`,
-          ).run(parsed.timestamp, parsed.power_w, parsed.energy_import_kwh);
-
-          // insert gas
-          if (parsed.external?.[0]) {
-            db.prepare(
-              `
-    INSERT INTO gas (
-      timestamp,
-      value
-    )
-    VALUES (?, ?)
-  `,
-            ).run(parsed.external[0].timestamp, parsed.external[0].value);
+            resolve(
+              NextResponse.json({
+                currentElectriciy: parsed.power_w,
+              }),
+            );
+          } catch (err) {
+            resolve(NextResponse.json({ error: String(err) }, { status: 500 }));
           }
-
-          resolve(
-            NextResponse.json(JSON.parse(data), {
-              status: res.statusCode,
-            }),
-          );
         });
       },
     );

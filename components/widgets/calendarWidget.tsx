@@ -5,13 +5,11 @@ import { CalendarEvent } from "@/types/calendarType";
 import { glassCard } from "@/lib/constants/glassCard";
 
 const getCalendarEvents = unstable_cache(
-  async (): Promise<CalendarEvent[]> => {
-    const now = new Date();
-
-    const startOfToday = new Date(now);
+  async (dateKey: string): Promise<CalendarEvent[]> => {
+    const startOfToday = new Date(dateKey);
     startOfToday.setHours(0, 0, 0, 0);
 
-    const endOfToday = new Date(now);
+    const endOfToday = new Date(dateKey);
     endOfToday.setHours(23, 59, 59, 999);
 
     const res = await calendar.events.list({
@@ -35,11 +33,15 @@ const getCalendarEvents = unstable_cache(
     }));
   },
   ["calendar-events"],
-  { revalidate: 1800 },
+  {
+    revalidate: 300, // 5 minutes
+    tags: ["calendar-events"],
+  },
 );
 
 export async function CalendarWidget() {
-  const events = await getCalendarEvents();
+  const today = new Date().toISOString().split("T")[0]; // "2026-06-02"
+  const events = await getCalendarEvents(today);
 
   return (
     <Card className={`h-full ${glassCard}`}>
