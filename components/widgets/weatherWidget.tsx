@@ -38,7 +38,7 @@ export async function WeatherWidget() {
             {description}
           </div>
           <div className="flex flex-row items-center gap-2">
-            <div className="text-6xl font-semibold flex flex-row">{temp}° </div>
+            <div className="text-7xl font-semibold flex flex-row">{temp}° </div>
             <Image src={iconUrl} alt={description} width={25} height={25} />
           </div>
         </div>

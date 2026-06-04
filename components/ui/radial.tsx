@@ -27,7 +27,7 @@ export function Radial({
   return (
     <div className="flex flex-col w-full h-full gap-3">
       <div className="w-full flex flex-col">
-        <strong className="text-lg leading-tight" style={{ color: fill }}>
+        <strong className="text-2xl leading-tight" style={{ color: fill }}>
           {(totalKwh ?? 0).toFixed(2)} kWh
         </strong>
       </div>

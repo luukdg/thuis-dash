@@ -49,11 +49,11 @@ export function InsideTempWidget() {
               className="flex flex-col leading-none bg-muted rounded-xl px-3 justify-center"
             >
               <div
-                className={`text-2xl font-bold ${getHeatColor(room.temperature)}`}
+                className={`text-4xl font-bold ${getHeatColor(room.temperature)}`}
               >
                 {room.temperature.toFixed(1)}°
               </div>
-              <div className="text-[10px] text-muted-foreground truncate">
+              <div className="text-xs text-muted-foreground truncate">
                 {room.name}
               </div>
             </div>

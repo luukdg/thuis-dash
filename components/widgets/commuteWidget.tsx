@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@components/ui/card";
 import { parseDurationToMinutes } from "@/lib/commute/parseDurationsToMinutes";
 import { glassCard } from "@/lib/constants/glassCard";
 
@@ -43,7 +43,7 @@ export async function CommuteWidget() {
   return (
     <Card className={`h-full ${glassCard}`}>
       <CardContent className="flex items-center justify-center h-full">
-        <div className="flex flex-col font-bold text-4xl items-center">
+        <div className="flex flex-col font-bold text-5xl items-center">
           <p
             className={
               minutes < 30
@@ -55,7 +55,8 @@ export async function CommuteWidget() {
           >
             {minutes} min
           </p>
-          <p className="text-xl text-muted-foreground">({distanceKm} km)</p>
+          <p className="text-xl">({distanceKm} km)</p>
+          <p className="text-sm text-muted-foreground">Veldhoven → Veghel</p>
         </div>
       </CardContent>
     </Card>

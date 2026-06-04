@@ -1,6 +1,6 @@
 import garbage from "@/public/garbage-calendar-2026.json";
 
-export function getUpcomingGarbageEvents(limit = 2) {
+export function getUpcomingGarbageEvents(limit = 3) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 

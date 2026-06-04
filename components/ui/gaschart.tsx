@@ -31,7 +31,7 @@ export function GasChart({ hourlyGas, totalM3 }: GasChartProps) {
     <div className="flex flex-col w-full h-full gap-3">
       <div className="w-full flex flex-row gap-2">
         <strong
-          className="text-lg leading-tight"
+          className="text-2xl leading-tight"
           style={{ color: "#ff2929cf" }}
         >
           {totalM3.toFixed(2)} m³

@@ -4,7 +4,7 @@ import { CalendarWidget } from "@components/widgets/calendarWidget";
 import { GarbageWidget } from "@components/widgets/garbageWidget";
 import { CameraWidget } from "@components/widgets/cameraWidget";
 import { EnergyWidget } from "@components/widgets/energyWidget";
-import { AtHomeWidget } from "@components/widgets/atHomeWidget";
+import { MediaWidget } from "@components/widgets/mediaWidget";
 import { InsideTempWidget } from "@components/widgets/insideTempWidget";
 
 export function WidgetLayout() {
@@ -29,13 +29,14 @@ export function WidgetLayout() {
       </div>
 
       <div className="col-start-4 row-start-2 row-span-1">
-        <AtHomeWidget />
+        <MediaWidget />
       </div>
 
       {/* Row 3 - Full Width Secondary Info */}
       <div className="col-start-1 col-span-2 row-start-3">
         <EnergyWidget />
       </div>
+
       <div className="col-start-3 col-span-1 row-start-3">
         <InsideTempWidget />
       </div>

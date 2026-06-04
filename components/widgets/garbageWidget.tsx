@@ -10,7 +10,7 @@ export function GarbageWidget() {
 
   return (
     <Card className={`h-full ${glassCard} p-0`}>
-      <CardContent className="flex flex-col gap-3 p-1">
+      <CardContent className="flex flex-col gap-1 p-1">
         {garbageEvents.length === 0 ? (
           <p className="text-sm font-normal text-muted-foreground">
             Geen afval deze periode
@@ -19,14 +19,14 @@ export function GarbageWidget() {
           garbageEvents.map((event) => (
             <div
               key={event.date}
-              className="flex items-center justify-between gap-3 rounded-xl border p-3"
+              className="flex flex-col gap-1 rounded-xl border p-3"
             >
               <div className="flex flex-col">
-                <span className="font-bold text-xs">
+                <span className="font-bold text-xl">
                   {formatGarbageDate(event.date)}
                 </span>
               </div>
-              <div className="flex flex-wrap justify-end gap-2">
+              <div className="flex flex-wrap gap-2">
                 {event.types.map((type) => (
                   <Badge
                     key={type}

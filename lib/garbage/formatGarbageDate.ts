@@ -7,8 +7,6 @@ export function formatGarbageDate(dateString: string) {
 
   return formatter
     .formatToParts(new Date(dateString))
-    .map((part) =>
-      part.type === "weekday" ? part.value.slice(0, 2) : part.value,
-    )
+    .map((part) => (part.type === "weekday" ? part.value : part.value))
     .join("");
 }
