@@ -3,7 +3,7 @@ import path from "path";
 import { TokenStore } from "@/types/tokenType";
 
 const TOKEN_URL = "https://login.tado.com/oauth2/token";
-const TOKEN_FILE = path.join(process.cwd(), ".tado-token.json"); // persist here
+const TOKEN_FILE = path.join(process.cwd(), "data/tado-token.json"); // persist here
 let refreshPromise: Promise<string> | null = null;
 
 function loadTokenStore(): TokenStore {
