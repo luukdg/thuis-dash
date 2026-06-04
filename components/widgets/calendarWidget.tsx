@@ -23,7 +23,6 @@ const getCalendarEvents = unstable_cache(
     });
 
     const items = res.data.items ?? [];
-    console.log("Fetched calendar events:", items);
 
     return items.map((event) => ({
       id: event.id ?? crypto.randomUUID(),

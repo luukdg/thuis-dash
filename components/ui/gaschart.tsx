@@ -18,14 +18,20 @@ interface GasChartProps {
 }
 
 export function GasChart({ hourlyGas, totalM3 }: GasChartProps) {
+  const currentHour = new Date().getHours();
+
   const data = Array.from({ length: 24 }, (_, i) => {
     const hour = `${String(i).padStart(2, "0")}:00`;
     const match = hourlyGas.find((entry) => entry.hour === hour);
     return {
       time: hour,
-      gas: match?.usage ?? 0,
+      // null for future hours — Recharts won't draw the line there
+      gas: i <= currentHour ? (match?.usage ?? 0) : null,
     };
   });
+
+  const maxGas = Math.max(...data.map((d) => d.gas ?? 0), 0.01);
+  const yMax = parseFloat((maxGas * 1.2).toFixed(3));
 
   return (
     <div className="flex flex-col w-full h-full gap-3">
@@ -55,8 +61,7 @@ export function GasChart({ hourlyGas, totalM3 }: GasChartProps) {
             axisLine={false}
             tickLine={false}
             tick={{ fontSize: 9 }}
-            ticks={[0.0, 0.05, 0.1, 0.15, 0.2]}
-            domain={[0, 0.2]}
+            domain={[0, yMax]}
             tickFormatter={(value) => (value === 0 ? "0" : value.toFixed(2))}
           />
           <Area
@@ -67,6 +72,7 @@ export function GasChart({ hourlyGas, totalM3 }: GasChartProps) {
             fill="#f16363"
             fillOpacity={0.1}
             dot={false}
+            connectNulls={false} // ensures line stops at null
           />
         </AreaChart>
       </ResponsiveContainer>

@@ -9,8 +9,10 @@ import { GasChart } from "@components/ui/gaschart";
 export function EnergyWidget() {
   const [currentEnergy, setCurrentEnergy] = useState(0);
   const [hourlyData, setHourlyData] = useState<{
-    hourlyGas: any[];
-    hourlyKwh: any[];
+    charts: {
+      hourlyGas: any[];
+      hourlyKwh: any[];
+    };
     today: { kwh: number; m3: number };
   } | null>(null);
 
@@ -31,6 +33,7 @@ export function EnergyWidget() {
       const res = await fetch("api/homewizard/history/");
       const data = await res.json();
       console.log("Hourly data:", data);
+      console.log("hourlyGas entries:", data.charts.hourlyGas);
       setHourlyData(data);
     }
 
@@ -56,7 +59,7 @@ export function EnergyWidget() {
         {/* Gas */}
         <div className="flex flex-col items-center justify-center col-span-2 w-full h-full">
           <GasChart
-            hourlyGas={hourlyData?.hourlyGas ?? []}
+            hourlyGas={hourlyData?.charts.hourlyGas ?? []}
             totalM3={hourlyData?.today.m3 ?? 0}
           />
         </div>
