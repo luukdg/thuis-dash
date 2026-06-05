@@ -46,7 +46,7 @@ export function GasChart({ hourlyGas, totalM3 }: GasChartProps) {
 
       <ResponsiveContainer className="p-0" width="100%" height="100%">
         <AreaChart
-          margin={{ top: 0, right: 0, bottom: -10, left: -30 }}
+          margin={{ top: 0, right: 0, bottom: -10, left: -25 }}
           data={data}
         >
           <CartesianGrid vertical={false} stroke="#888" strokeOpacity={0.2} />
@@ -62,7 +62,7 @@ export function GasChart({ hourlyGas, totalM3 }: GasChartProps) {
             tickLine={false}
             tick={{ fontSize: 9 }}
             domain={[0, yMax]}
-            tickFormatter={(value) => (value === 0 ? "0" : value.toFixed(2))}
+            tickFormatter={(value) => (value === 0 ? "0" : value.toFixed(3))}
           />
           <Area
             type="monotone"

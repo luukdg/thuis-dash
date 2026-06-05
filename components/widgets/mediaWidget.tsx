@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@components/ui/card";
+import { Card, CardContent, CardFooter } from "@components/ui/card";
 import { useState, useEffect } from "react";
 import { glassCard } from "@/lib/constants/glassCard";
 import { Badge } from "@components/ui/badge";
@@ -11,16 +11,36 @@ import {
 
 export function MediaWidget() {
   const [items, setItems] = useState<any[]>([]);
+  const [lastAdded, setLastAdded] = useState<any>(null);
 
   useEffect(() => {
-    const load = async () => {
+    const loadPlayback = async () => {
       const res = await fetch("/api/jellyfin/playback");
+      if (!res.ok) {
+        console.error("Failed loading playback");
+        return;
+      }
       const json = await res.json();
       setItems(json);
     };
 
-    load();
-    const interval = setInterval(load, 5000);
+    const loadAdded = async () => {
+      const res = await fetch("/api/jellyfin/last-added");
+      if (!res.ok) {
+        console.error("Failed loading last-added");
+        return;
+      }
+      const json = await res.json();
+      setLastAdded(json);
+    };
+
+    loadPlayback();
+    loadAdded();
+
+    const interval = setInterval(() => {
+      loadPlayback();
+      loadAdded();
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -55,10 +75,30 @@ export function MediaWidget() {
           })
         ) : (
           <div className="h-full flex items-center justify-center">
-            Nothing playing right now
+            Niks aan het afspelen
           </div>
         )}
       </CardContent>
+      <CardFooter className="text-xs text-muted-foreground gap-2">
+        <span>🆕</span>
+        {lastAdded ? (
+          lastAdded.type === "Episode" ? (
+            <span>
+              {lastAdded.series}{" "}
+              <span className="font-medium text-foreground">
+                S{String(lastAdded.season).padStart(2, "0")}E
+                {String(lastAdded.episode).padStart(2, "0")}
+              </span>
+              {" — "}
+              {lastAdded.title}
+            </span>
+          ) : (
+            <span>{lastAdded.title}</span>
+          )
+        ) : (
+          <span>Geen nieuwe items</span>
+        )}
+      </CardFooter>
     </Card>
   );
 }

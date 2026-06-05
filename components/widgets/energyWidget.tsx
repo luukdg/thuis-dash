@@ -32,8 +32,7 @@ export function EnergyWidget() {
     async function loadHourlyData() {
       const res = await fetch("api/homewizard/history/");
       const data = await res.json();
-      console.log("Hourly data:", data);
-      console.log("hourlyGas entries:", data.charts.hourlyGas);
+
       setHourlyData(data);
     }
 

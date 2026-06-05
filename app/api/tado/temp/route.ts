@@ -8,13 +8,13 @@ export async function GET() {
       "https://hops.tado.com/homes/1733550/rooms?ngsw-bypass=true",
     )) as any[];
 
-    console.log("[weather] Success", rooms);
-
     // Ordering API input
     const result: RoomTemp[] = rooms.map((room: any) => ({
       id: room.id,
       name: room.name,
       temperature: room.sensorDataPoints?.insideTemperature?.value ?? 0,
+      isHeating: (room.heatingPower?.percentage ?? 0) > 0,
+      setting: room.setting?.temperature?.value ?? 0,
     }));
 
     return NextResponse.json(result);

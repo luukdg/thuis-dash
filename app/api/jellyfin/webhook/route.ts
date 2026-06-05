@@ -3,6 +3,7 @@ import {
   startPlayback,
   stopPlayback,
   updatePlayback,
+  setLastItemAdded,
 } from "@/lib/media/playbackStore";
 
 const ticksToSeconds = (ticks: number) => Math.floor(ticks / 10_000_000);
@@ -42,6 +43,20 @@ export async function POST(req: NextRequest) {
     case "PlaybackStop":
       stopPlayback(sessionId);
       break;
+
+    case "ItemAdded": {
+      setLastItemAdded({
+        title: body.Name,
+        series: body.SeriesName,
+        season: body.SeasonNumber,
+        episode: body.EpisodeNumber,
+        id: body.ItemId,
+        type: body.ItemType,
+        addedAt: body.Timestamp,
+      });
+
+      break;
+    }
   }
 
   return NextResponse.json({ ok: true });

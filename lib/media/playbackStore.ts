@@ -13,6 +13,8 @@ type Playback = {
 
 const activePlaybacks = new Map<string, Playback>();
 
+let lastItemAdded: any = null;
+
 export function startPlayback(sessionId: string, data: Playback) {
   activePlaybacks.set(sessionId, data);
 }
@@ -33,4 +35,12 @@ export function stopPlayback(sessionId: string) {
 
 export function getAllPlaybacks() {
   return Array.from(activePlaybacks.values());
+}
+
+export function setLastItemAdded(item: any) {
+  lastItemAdded = item; // already mapped in the webhook handler
+}
+
+export function getLastItemAdded() {
+  return lastItemAdded;
 }

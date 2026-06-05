@@ -1,75 +1,61 @@
+"use client";
+
 import { Card, CardContent, CardHeader } from "@components/ui/card";
-import { calendar } from "@/lib/calendar/google";
-import { unstable_cache } from "next/cache";
 import { CalendarEvent } from "@/types/calendarType";
 import { glassCard } from "@/lib/constants/glassCard";
+import { useEffect, useMemo, useState } from "react";
+import {
+  groupEventsByDate,
+  formatDateHeader,
+} from "@/lib/calendar/helperFunctions";
+import { Skeleton } from "@components/ui/skeleton";
 
-const getCalendarEvents = unstable_cache(
-  async (dateKey: string): Promise<CalendarEvent[]> => {
-    const startOfToday = new Date(dateKey);
-    startOfToday.setHours(0, 0, 0, 0);
+export function CalendarWidget() {
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    const endDate = new Date(dateKey);
-    endDate.setDate(endDate.getDate() + 60);
-    endDate.setHours(23, 59, 59, 999);
+  useEffect(() => {
+    async function load() {
+      const res = await fetch("/api/calendar");
 
-    const res = await calendar.events.list({
-      calendarId: process.env.GOOGLE_CALENDAR_ID!,
-      timeMin: startOfToday.toISOString(),
-      timeMax: endDate.toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: "startTime",
-    });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
 
-    const items = res.data.items ?? [];
-
-    return items.map((event) => ({
-      id: event.id ?? crypto.randomUUID(),
-      summary: event.summary ?? "Untitled event",
-      start: event.start?.dateTime ?? event.start?.date ?? "",
-      end: event.end?.dateTime ?? event.end?.date ?? "",
-      allDay: !event.start?.dateTime,
-    }));
-  },
-  ["calendar-events"],
-  {
-    revalidate: 300,
-    tags: ["calendar-events"],
-  },
-);
-
-function groupEventsByDate(
-  events: CalendarEvent[],
-): Map<string, CalendarEvent[]> {
-  const grouped = new Map<string, CalendarEvent[]>();
-
-  for (const event of events) {
-    const dateKey = event.start.split("T")[0];
-    if (!grouped.has(dateKey)) {
-      grouped.set(dateKey, []);
+      const data = await res.json();
+      setEvents(data);
+      setLoading(false);
     }
-    grouped.get(dateKey)!.push(event);
-  }
 
-  return grouped;
-}
+    load();
+    const interval = setInterval(load, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-function formatDateHeader(dateKey: string): string {
-  const date = new Date(dateKey + "T00:00:00");
-  return date.toLocaleDateString("nl-NL", { day: "numeric", month: "long" });
-}
-
-export async function CalendarWidget() {
-  const today = new Date().toISOString().split("T")[0];
-  const events = await getCalendarEvents(today);
-  const groupedEvents = groupEventsByDate(events);
+  const groupedEvents = useMemo(() => groupEventsByDate(events), [events]);
 
   return (
     <Card className={`h-full ${glassCard}`}>
       <CardHeader className="text-xl">Afspraken</CardHeader>
       <CardContent className="space-y-4 overflow-y-auto">
-        {events.length === 0 ? (
+        {loading ? (
+          <>
+            {[1, 2, 3].map((day) => (
+              <div key={day} className="space-y-3">
+                {/* Datum */}
+                <Skeleton className="h-4 w-16" />
+
+                {/* Event(s) */}
+                <div className="space-y-2">
+                  <Skeleton className="h-[46px] w-full rounded-2xl" />
+                  {day === 2 && (
+                    <Skeleton className="h-[46px] w-full rounded-2xl" />
+                  )}
+                </div>
+              </div>
+            ))}
+          </>
+        ) : events.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Geen aankomende afspraken
           </p>
