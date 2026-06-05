@@ -8,6 +8,8 @@ export async function GET() {
       "https://hops.tado.com/homes/1733550/rooms?ngsw-bypass=true",
     )) as any[];
 
+    console.log("[weather] Success", rooms);
+
     // Ordering API input
     const result: RoomTemp[] = rooms.map((room: any) => ({
       id: room.id,
@@ -17,7 +19,7 @@ export async function GET() {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Failed to fetch /mobileDevices Tado data", error);
+    console.error("Failed to fetch Tado data", error);
     return NextResponse.json([]);
   }
 }

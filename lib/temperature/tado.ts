@@ -7,16 +7,31 @@ const TOKEN_FILE = path.join(process.cwd(), "data/.tado-token.json"); // persist
 let refreshPromise: Promise<string> | null = null;
 
 function loadTokenStore(): TokenStore {
+  console.log("[tado] Loading token store from:", TOKEN_FILE);
+
   try {
     if (fs.existsSync(TOKEN_FILE)) {
+      console.log("[tado] Token file exists");
+
       const raw = fs.readFileSync(TOKEN_FILE, "utf-8");
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+
+      console.log("[tado] Loaded token store", {
+        hasAccessToken: !!parsed.accessToken,
+        hasRefreshToken: !!parsed.refreshToken,
+        expiresAt: parsed.expiresAt,
+      });
+
+      return parsed;
     }
+
+    console.log("[tado] Token file does not exist");
   } catch (err) {
-    console.warn("[tado] Failed to load token store, using env fallback:", err);
+    console.error("[tado] Failed loading token store:", err);
   }
 
-  // First run - use env variable as seed
+  console.log("[tado] Falling back to env refresh token");
+
   return {
     refreshToken: process.env.TADO_REFRESH_TOKEN!,
     accessToken: null,
@@ -26,7 +41,11 @@ function loadTokenStore(): TokenStore {
 
 function saveTokenStore(store: TokenStore): void {
   try {
+    console.log("[tado] Saving token file:", TOKEN_FILE);
+
     fs.writeFileSync(TOKEN_FILE, JSON.stringify(store, null, 2), "utf-8");
+
+    console.log("[tado] Token file saved");
   } catch (err) {
     console.error("[tado] Failed to save token store:", err);
   }
@@ -93,10 +112,17 @@ export async function getAccessToken(): Promise<string> {
 // ─── Fetch Wrapper ────────────────────────────────────────────────────────────
 
 export async function tadoFetch<T = unknown>(endpoint: string): Promise<T> {
+  console.log("[tado] Fetch:", endpoint);
+
   const token = await getAccessToken();
 
   const res = await fetch(endpoint, {
     headers: { Authorization: `Bearer ${token}` },
+  });
+
+  console.log("[tado] Response:", {
+    endpoint,
+    status: res.status,
   });
 
   // 👇 Retry once if 401
