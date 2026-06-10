@@ -9,14 +9,16 @@ type Playback = {
   startedAt: string;
   currentTime?: number;
   duration?: number;
+  lastSeen: number; // epoch ms van laatste webhook-update
 };
 
 const activePlaybacks = new Map<string, Playback>();
+const STALE_THRESHOLD_MS = 90_000; // 90s zonder progress = dode sessie
 
 let lastItemAdded: any = null;
 
 export function startPlayback(sessionId: string, data: Playback) {
-  activePlaybacks.set(sessionId, data);
+  activePlaybacks.set(sessionId, { ...data, lastSeen: Date.now() });
 }
 
 export function updatePlayback(sessionId: string, data: Partial<Playback>) {
@@ -26,6 +28,7 @@ export function updatePlayback(sessionId: string, data: Partial<Playback>) {
   activePlaybacks.set(sessionId, {
     ...existing,
     ...data,
+    lastSeen: Date.now(), // elke PlaybackProgress ververst de levensduur
   });
 }
 
@@ -34,6 +37,15 @@ export function stopPlayback(sessionId: string) {
 }
 
 export function getAllPlaybacks() {
+  const now = Date.now();
+
+  // ruim ghost sessions op die geen progress meer sturen
+  for (const [id, p] of activePlaybacks) {
+    if (now - p.lastSeen > STALE_THRESHOLD_MS) {
+      activePlaybacks.delete(id);
+    }
+  }
+
   return Array.from(activePlaybacks.values());
 }
 
