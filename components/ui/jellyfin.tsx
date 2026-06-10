@@ -3,16 +3,16 @@ export function JellyfinLogo({ className }: { className?: string }) {
     <svg
       viewBox="0 0 512 512"
       xmlns="http://www.w3.org/2000/svg"
-      fill-rule="evenodd"
-      clip-rule="evenodd"
-      stroke-linejoin="round"
-      stroke-miterlimit="2"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      strokeLinejoin="round"
+      strokeMiterlimit="2"
       className={className}
     >
       <path
         d="M24.711 49.158c-1.552-3.116 8.626-21.57 11.788-21.57 3.167.002 13.323 18.488 11.788 21.57-1.535 3.081-22.025 3.115-23.577 0h.001z"
         fill="url(#prefix___Linear1)"
-        fill-rule="nonzero"
+        fillRule="nonzero"
         transform="matrix(6.94432 0 0 6.94432 2.538 6.006)"
       />
       <path
@@ -30,8 +30,8 @@ export function JellyfinLogo({ className }: { className?: string }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="matrix(60 33 -33 60 12.499 30)"
         >
-          <stop offset="0" stop-color="#aa5cc3" />
-          <stop offset="1" stop-color="#00a4dc" />
+          <stop offset="0" stopColor="#aa5cc3" />
+          <stop offset="1" stopColor="#00a4dc" />
         </linearGradient>
         <linearGradient
           id="prefix___Linear2"
@@ -42,8 +42,8 @@ export function JellyfinLogo({ className }: { className?: string }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="matrix(60 33 -33 60 12.499 30)"
         >
-          <stop offset="0" stop-color="#aa5cc3" />
-          <stop offset="1" stop-color="#00a4dc" />
+          <stop offset="0" stopColor="#aa5cc3" />
+          <stop offset="1" stopColor="#00a4dc" />
         </linearGradient>
       </defs>
     </svg>

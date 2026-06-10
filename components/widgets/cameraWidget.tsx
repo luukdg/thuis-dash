@@ -21,10 +21,9 @@ export function CameraWidget() {
   const baseUrl = process.env.NEXT_PUBLIC_GO2RTC_URL;
 
   return (
-    <Card className={`h-full ${glassCard}`}>
-      <CardHeader className="text-xl">Camera</CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        <div className="aspect-video w-full overflow-hidden rounded-md bg-muted">
+    <Card className={`h-full ${glassCard} p-0`}>
+      <CardContent className="h-full flex flex-col items-center justify-center p-0">
+        <div className="w-full h-full bg-muted">
           <img
             src={`${baseUrl}/api/frame.jpeg?src=tapo&t=${timestamp}`}
             alt="Voordeur camera"

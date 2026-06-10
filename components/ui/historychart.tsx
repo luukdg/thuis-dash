@@ -27,7 +27,7 @@ export function HistoryChart({ history, totalKwh, totalM3 }: EnergyChartProps) {
 
   return (
     <div className="flex flex-col w-full h-full gap-2">
-      <div className="flex flex-row gap-4 items-baseline">
+      <div className="flex flex-row gap-6 items-baseline">
         <span className="flex items-center gap-1.5">
           <span
             className="inline-block w-2.5 h-2.5 rounded-full"
@@ -45,6 +45,7 @@ export function HistoryChart({ history, totalKwh, totalM3 }: EnergyChartProps) {
             className="inline-block w-2.5 h-2.5 rounded-full"
             style={{ backgroundColor: GAS_COLOR }}
           />
+
           <strong
             className="text-2xl leading-tight"
             style={{ color: GAS_COLOR }}

@@ -79,7 +79,7 @@ export function CalendarWidget() {
                           hour12: false,
                         })}
                   </span>
-                  <p className="flex-1 font-semibold leading-tight">
+                  <p className="flex-1 text-lg font-semibold leading-tight">
                     {event.summary}
                   </p>
                 </div>
