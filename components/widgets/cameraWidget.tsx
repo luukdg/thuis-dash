@@ -22,6 +22,12 @@ export function CameraWidget() {
     return () => clearInterval(interval);
   }, [fullscreen]);
 
+  useEffect(() => {
+    if (!fullscreen) return;
+    const id = setTimeout(() => setFullscreen(false), 30_000);
+    return () => clearTimeout(id);
+  }, [fullscreen]);
+
   const baseUrl = process.env.NEXT_PUBLIC_GO2RTC_URL;
   const imgSrc = `${baseUrl}/api/frame.jpeg?src=tapo&t=${timestamp}`;
 
