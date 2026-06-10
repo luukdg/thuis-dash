@@ -4,59 +4,64 @@ import { Card, CardContent, CardFooter } from "@components/ui/card";
 import { useState, useEffect } from "react";
 import { glassCard } from "@/lib/constants/glassCard";
 import { Badge } from "@components/ui/badge";
-import {
-  formatPlayBackTime,
-  getProgressPercent,
-} from "@/lib/media/formatPlaybackTime";
+import { getProgressPercent } from "@/lib/media/formatPlaybackTime";
+import { JellyfinLogo } from "@components/ui/jellyfin";
 
 export function MediaWidget() {
   const [items, setItems] = useState<any[]>([]);
   const [lastAdded, setLastAdded] = useState<any>(null);
 
   useEffect(() => {
-    const loadPlayback = async () => {
-      const res = await fetch("/api/jellyfin/playback");
-      if (!res.ok) {
-        console.error("Failed loading playback");
-        return;
+    let active = true;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const tick = async () => {
+      try {
+        const [playbackRes, addedRes] = await Promise.all([
+          fetch("/api/jellyfin/playback"),
+          fetch("/api/jellyfin/last-added"),
+        ]);
+
+        if (active && playbackRes.ok) {
+          const json = await playbackRes.json();
+          setItems(Array.isArray(json) ? json : []); // guard against non-array
+        }
+
+        if (active && addedRes.ok) {
+          setLastAdded(await addedRes.json());
+        }
+      } catch (err) {
+        console.error("Failed loading media", err);
+      } finally {
+        if (active) {
+          timeoutId = setTimeout(tick, 5000); // schedule next only after this finishes
+        }
       }
-      const json = await res.json();
-      setItems(json);
     };
 
-    const loadAdded = async () => {
-      const res = await fetch("/api/jellyfin/last-added");
-      if (!res.ok) {
-        console.error("Failed loading last-added");
-        return;
-      }
-      const json = await res.json();
-      setLastAdded(json);
+    tick();
+
+    return () => {
+      active = false;
+      clearTimeout(timeoutId);
     };
-
-    loadPlayback();
-    loadAdded();
-
-    const interval = setInterval(() => {
-      loadPlayback();
-      loadAdded();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
   return (
-    <Card className={`h-full ${glassCard} p-0 overflow-y-auto`}>
-      <CardContent className="flex flex-col gap-3 p-1 h-full">
+    <Card className={`h-full ${glassCard} p-0 gap-0`}>
+      <CardContent className="flex flex-col gap-3 p-1 h-full overflow-y-auto pb-0">
         {items.length > 0 ? (
           items.map((item) => {
             return (
               <div
-                key={item.sessionId}
+                key={
+                  item.sessionId ??
+                  `${item.user}-${item.series}-${item.episode}`
+                }
                 className="flex flex-col gap-1 rounded-xl border p-3"
               >
                 <p className="font-bold">{item.series}</p>
-                <p className="text-sm opacity-80">
+                <p className="text-xs opacity-80">
                   Seizoen {item.season} • Aflevering {item.episode}
                 </p>
                 <Badge>
@@ -80,7 +85,7 @@ export function MediaWidget() {
         )}
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground gap-2">
-        <span>🆕</span>
+        <JellyfinLogo className="w-4 h-4" />
         {lastAdded ? (
           lastAdded.type === "Episode" ? (
             <span>

@@ -16,6 +16,8 @@ const agent = new https.Agent({
 
 const toUnix = (ts: string) => Math.floor(new Date(ts).getTime() / 1000);
 
+const HISTORY_DAYS = 7;
+
 export function GET(): Promise<Response> {
   return new Promise<Response>((resolve) => {
     const req = https.request(
@@ -44,98 +46,86 @@ export function GET(): Promise<Response> {
           try {
             const parsed = JSON.parse(data);
 
-            // INSERT electricity
+            // 1. Ruwe metingen opslaan (nodig voor MAX - MIN van vandaag)
             db.prepare(
-              `
-            INSERT INTO electricity (timestamp, power_w, energy_import_kwh)
-            VALUES (?, ?, ?)
-          `,
+              `INSERT INTO electricity (timestamp, power_w, energy_import_kwh)
+           VALUES (?, ?, ?)`,
             ).run(
               toUnix(parsed.timestamp),
               parsed.power_w,
               parsed.energy_import_kwh,
             );
 
-            // INSERT gas (only if new timestamp)
             if (parsed.external?.[0]) {
               db.prepare(
-                `
-              INSERT OR IGNORE INTO gas (timestamp, value)
-              VALUES (?, ?)
-            `,
+                `INSERT OR IGNORE INTO gas (timestamp, value)
+             VALUES (?, ?)`,
               ).run(
                 toUnix(parsed.external[0].timestamp),
                 parsed.external[0].value,
               );
             }
 
-            // Daily kWh total
+            // 2. Bepaal de lokale datum één keer (DST-proof via 'localtime')
+            const { d: today } = db
+              .prepare(`SELECT date('now', 'localtime') AS d`)
+              .get() as { d: string };
+
+            // 3. Totalen van vandaag
             const dailyKwh = db
               .prepare(
-                `
-            SELECT 
-              MAX(energy_import_kwh) - MIN(energy_import_kwh) AS kwh_today
-            FROM electricity
-            WHERE date(timestamp + 7200, 'unixepoch') = date('now', '+2 hours')
-          `,
+                `SELECT MAX(energy_import_kwh) - MIN(energy_import_kwh) AS kwh_today
+             FROM electricity
+             WHERE date(timestamp, 'unixepoch', 'localtime') = ?`,
               )
-              .get() as { kwh_today: number };
+              .get(today) as { kwh_today: number | null };
 
-            // Daily m³ total
             const dailyGas = db
               .prepare(
-                `
-            SELECT 
-              MAX(value) - MIN(value) AS m3_today
-            FROM gas
-            WHERE date(timestamp + 7200, 'unixepoch') = date('now', '+2 hours')
-          `,
+                `SELECT MAX(value) - MIN(value) AS m3_today
+             FROM gas
+             WHERE date(timestamp, 'unixepoch', 'localtime') = ?`,
               )
-              .get() as { m3_today: number };
+              .get(today) as { m3_today: number | null };
 
-            // Hourly gas usage (for chart)
-            const hourlyGas = db
-              .prepare(
-                `
-            SELECT
-              strftime('%H:00', timestamp + 7200, 'unixepoch') AS hour,
-              MAX(value) - MIN(value) AS usage
-            FROM gas
-            WHERE date(timestamp + 7200, 'unixepoch') = date('now', '+2 hours')
-            GROUP BY hour
-            ORDER BY hour
-          `,
-              )
-              .all();
+            const kwhToday = dailyKwh.kwh_today ?? 0;
+            const m3Today = dailyGas.m3_today ?? 0;
 
-            // Hourly kWh usage (for chart)
-            const hourlyKwh = db
+            // 4. Dagtotaal wegschrijven (upsert) -> historie blijft bestaan
+            db.prepare(
+              `INSERT INTO daily_usage (date, kwh, m3)
+           VALUES (?, ?, ?)
+           ON CONFLICT(date) DO UPDATE SET
+             kwh = excluded.kwh,
+             m3  = excluded.m3`,
+            ).run(today, kwhToday, m3Today);
+
+            // 👇 5. OPRUIMEN — hier plaatsen
+            db.prepare(
+              `DELETE FROM electricity WHERE timestamp < strftime('%s', 'now', '-2 days')`,
+            ).run();
+            db.prepare(
+              `DELETE FROM gas WHERE timestamp < strftime('%s', 'now', '-2 days')`,
+            ).run();
+
+            // 6. Historie voor het staafdiagram (oud -> nieuw)
+            const history = db
               .prepare(
-                `
-            SELECT
-              strftime('%H:00', timestamp + 7200, 'unixepoch') AS hour,
-              MAX(energy_import_kwh) - MIN(energy_import_kwh) AS kwh
-            FROM electricity
-            WHERE date(timestamp + 7200, 'unixepoch') = date('now', '+2 hours')
-            GROUP BY hour
-            ORDER BY hour
-          `,
+                `SELECT date, kwh, m3
+             FROM daily_usage
+             ORDER BY date DESC
+             LIMIT ?`,
               )
-              .all();
+              .all(HISTORY_DAYS)
+              .reverse();
 
             resolve(
               NextResponse.json({
                 today: {
-                  kwh: dailyKwh.kwh_today ?? 0,
-                  m3: dailyGas.m3_today ?? 0,
+                  kwh: kwhToday,
+                  m3: m3Today,
                 },
-                charts: {
-                  hourlyGas,
-                  hourlyKwh,
-                },
-                live: {
-                  power_w: parsed.power_w,
-                },
+                history, // [{ date, kwh, m3 }, ...]
               }),
             );
           } catch (err) {

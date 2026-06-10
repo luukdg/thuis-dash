@@ -40,6 +40,10 @@ export function InsideTempWidget() {
             <Skeleton className="h-full w-[full] rounded-full" />
             <Skeleton className="h-full w-[full] rounded-full" />
           </>
+        ) : rooms.length === 0 ? (
+          <div className="col-span-full text-center text-red-500">
+            Netwerkfout
+          </div>
         ) : (
           rooms.map((room) => (
             <div

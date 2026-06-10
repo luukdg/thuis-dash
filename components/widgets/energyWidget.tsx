@@ -4,17 +4,12 @@ import { Card, CardContent } from "@components/ui/card";
 import { glassCard } from "@/lib/constants/glassCard";
 import { useState, useEffect } from "react";
 import { Radial } from "@components/ui/radial";
-import { GasChart } from "@components/ui/gaschart";
+import { HistoryChart } from "@components/ui/historychart";
+import { EnergyData } from "@/types/energyTypes";
 
 export function EnergyWidget() {
-  const [currentEnergy, setCurrentEnergy] = useState(0);
-  const [hourlyData, setHourlyData] = useState<{
-    charts: {
-      hourlyGas: any[];
-      hourlyKwh: any[];
-    };
-    today: { kwh: number; m3: number };
-  } | null>(null);
+  const [currentEnergy, setCurrentEnergy] = useState<number>(0);
+  const [energyData, setEnergyData] = useState<EnergyData | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -24,20 +19,19 @@ export function EnergyWidget() {
     }
 
     load();
-    const interval = setInterval(load, 5000);
+    const interval = setInterval(load, 5000); // 5 seconden
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    async function loadHourlyData() {
-      const res = await fetch("api/homewizard/history/");
+    async function loadEnergyData() {
+      const res = await fetch("/api/homewizard/history/");
       const data = await res.json();
-
-      setHourlyData(data);
+      setEnergyData(data);
     }
 
-    loadHourlyData();
-    const interval = setInterval(loadHourlyData, 60 * 60 * 1000);
+    loadEnergyData();
+    const interval = setInterval(loadEnergyData, 15 * 60 * 1000); // 15 minuten
     return () => clearInterval(interval);
   }, []);
 
@@ -50,16 +44,17 @@ export function EnergyWidget() {
           <Radial
             type="electricity"
             value={currentEnergy}
-            totalKwh={hourlyData?.today.kwh ?? 0}
+            totalKwh={energyData?.today.kwh ?? 0}
             fill="#b64afe"
           />
         </div>
 
         {/* Gas */}
         <div className="flex flex-col items-center justify-center col-span-2 w-full h-full">
-          <GasChart
-            hourlyGas={hourlyData?.charts.hourlyGas ?? []}
-            totalM3={hourlyData?.today.m3 ?? 0}
+          <HistoryChart
+            history={energyData?.history ?? []}
+            totalKwh={energyData?.today.kwh ?? 0}
+            totalM3={energyData?.today.m3 ?? 0}
           />
         </div>
       </CardContent>

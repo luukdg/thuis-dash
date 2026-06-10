@@ -38,7 +38,7 @@ export function getAllPlaybacks() {
 }
 
 export function setLastItemAdded(item: any) {
-  lastItemAdded = item; // already mapped in the webhook handler
+  lastItemAdded = item;
 }
 
 export function getLastItemAdded() {
