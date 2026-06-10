@@ -9,7 +9,7 @@ type Playback = {
   startedAt: string;
   currentTime?: number;
   duration?: number;
-  lastSeen: number; // epoch ms van laatste webhook-update
+  lastSeen: number;
 };
 
 const activePlaybacks = new Map<string, Playback>();
@@ -17,7 +17,10 @@ const STALE_THRESHOLD_MS = 90_000; // 90s zonder progress = dode sessie
 
 let lastItemAdded: any = null;
 
-export function startPlayback(sessionId: string, data: Playback) {
+export function startPlayback(
+  sessionId: string,
+  data: Omit<Playback, "lastSeen">, // ← caller hoeft het niet te geven
+) {
   activePlaybacks.set(sessionId, { ...data, lastSeen: Date.now() });
 }
 
