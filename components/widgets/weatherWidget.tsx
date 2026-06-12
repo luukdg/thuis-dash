@@ -1,30 +1,43 @@
+"use client";
+
 import { Card, CardContent } from "@components/ui/card";
 import Image from "next/image";
 import { glassCard } from "@/lib/constants/glassCard";
+import { useEffect, useState } from "react";
 
-async function getWeather() {
-  const response = await fetch(
-    `https://weather.googleapis.com/v1/currentConditions:lookup?key=${process.env.GOOGLE_ROUTES_API}&location.latitude=${process.env.LAT}&location.longitude=${process.env.LON}`,
-    { next: { revalidate: 900 } },
-  );
+type WeatherData = {
+  temp: number;
+  description: string;
+  iconUrl: string;
+};
 
-  if (!response.ok) throw new Error("Failed to fetch weather");
+export function WeatherWidget() {
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
-  return response.json();
-}
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch("/api/weather");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-export async function WeatherWidget() {
-  const data = await getWeather();
+        const data = await res.json();
+        setWeatherData(data);
+      } catch (error) {
+        console.error("Weather fetch faalde:", error);
+      }
+    }
 
-  const temp = Math.round(data.temperature.degrees);
-  const description = data.weatherCondition?.description?.text || "—";
-  const iconUrl = `${data.weatherCondition.iconBaseUri}.png`;
+    load();
+    const interval = setInterval(load, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
+  const temp = weatherData?.temp;
   let backgroundClass = "bg-gradient-to-br from-sky-300 via-sky-400 to-sky-500";
-  if (temp > 25) {
+  if (typeof temp === "number" && temp > 25) {
     backgroundClass =
       "bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500";
-  } else if (temp < 10) {
+  } else if (typeof temp === "number" && temp < 10) {
     backgroundClass =
       "bg-gradient-to-br from-cyan-300 via-cyan-400 to-cyan-500";
   }
@@ -35,11 +48,20 @@ export async function WeatherWidget() {
         <div className="flex h-full w-full flex-col justify-center items-center gap-2 text-black">
           <div className="flex flex-col items-center">
             <p className="text-xl font-semibold">Veldhoven</p>
-            {description}
+            {weatherData?.description}
           </div>
           <div className="flex flex-row items-center gap-2">
-            <div className="text-7xl font-semibold flex flex-row">{temp}° </div>
-            <Image src={iconUrl} alt={description} width={25} height={25} />
+            <div className="text-7xl font-semibold flex flex-row">
+              {weatherData?.temp}°{" "}
+            </div>
+            {weatherData?.iconUrl && (
+              <Image
+                src={weatherData.iconUrl}
+                alt={weatherData.description ?? "Weather icon"}
+                width={25}
+                height={25}
+              />
+            )}
           </div>
         </div>
       </CardContent>

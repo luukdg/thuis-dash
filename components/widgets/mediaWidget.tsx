@@ -24,7 +24,6 @@ export function MediaWidget() {
 
         if (active && playbackRes.ok) {
           const json = await playbackRes.json();
-          console.log("Playback items:", json);
           setItems(Array.isArray(json) ? json : []); // guard against non-array
         }
 
