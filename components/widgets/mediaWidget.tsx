@@ -52,30 +52,22 @@ export function MediaWidget() {
       <CardContent className="flex flex-col gap-3 p-1 h-full overflow-y-auto pb-0">
         {items.length > 0 ? (
           items.map((item) => {
-            const key =
-              item.sessionId ??
-              (item.type === "series"
-                ? `${item.user}-${item.series}-${item.episode}`
-                : `${item.user}-${item.title}`);
+            const isMovie = item.season == null || item.episode == null;
 
             return (
               <div
-                key={key}
+                key={
+                  item.sessionId ??
+                  `${item.user}-${item.series}-${item.season ?? "film"}-${item.episode ?? ""}`
+                }
                 className="flex flex-col gap-1 rounded-xl border p-3"
               >
-                {item.type === "series" ? (
-                  <>
-                    <p className="font-bold">{item.series}</p>
-                    <p className="text-xs opacity-80">
-                      Seizoen {item.season} • Aflevering {item.episode}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="font-bold">{item.title}</p>
-                    <p className="text-xs opacity-80">Film</p>
-                  </>
-                )}
+                <p className="font-bold">{item.title}</p>
+                <p className="text-xs opacity-80">
+                  {isMovie
+                    ? "Film"
+                    : `Seizoen ${item.season} • Aflevering ${item.episode}`}
+                </p>
                 <Badge>
                   {item.user} • {item.device}
                 </Badge>
