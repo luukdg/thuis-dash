@@ -63,7 +63,7 @@ export function MediaWidget() {
                 className="flex flex-col gap-1 rounded-xl border p-3"
               >
                 <p className="font-bold">
-                  {item.series ? `${item.series} •` : `${item.title}`}
+                  {item.series ? `${item.series}` : `${item.title}`}
                 </p>
                 <p className="text-xs opacity-80">
                   {isMovie
