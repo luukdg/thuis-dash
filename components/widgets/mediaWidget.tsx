@@ -52,18 +52,30 @@ export function MediaWidget() {
       <CardContent className="flex flex-col gap-3 p-1 h-full overflow-y-auto pb-0">
         {items.length > 0 ? (
           items.map((item) => {
+            const key =
+              item.sessionId ??
+              (item.type === "series"
+                ? `${item.user}-${item.series}-${item.episode}`
+                : `${item.user}-${item.title}`);
+
             return (
               <div
-                key={
-                  item.sessionId ??
-                  `${item.user}-${item.series}-${item.episode}`
-                }
+                key={key}
                 className="flex flex-col gap-1 rounded-xl border p-3"
               >
-                <p className="font-bold">{item.series}</p>
-                <p className="text-xs opacity-80">
-                  Seizoen {item.season} • Aflevering {item.episode}
-                </p>
+                {item.type === "series" ? (
+                  <>
+                    <p className="font-bold">{item.series}</p>
+                    <p className="text-xs opacity-80">
+                      Seizoen {item.season} • Aflevering {item.episode}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-bold">{item.title}</p>
+                    <p className="text-xs opacity-80">Film</p>
+                  </>
+                )}
                 <Badge>
                   {item.user} • {item.device}
                 </Badge>
